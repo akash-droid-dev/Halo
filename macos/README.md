@@ -6,6 +6,9 @@ camera housing, above the menu bar, on every Space.
 This is the app you actually run. The React project at the repository root is
 the design reference it was built from.
 
+Selling it later: [DISTRIBUTION.md](DISTRIBUTION.md) — read the structural
+blocker at the top before spending anything.
+
 ## Requirements
 
 - macOS 14 or later
@@ -24,7 +27,17 @@ open build/HALO.app
 To install:
 
 ```bash
-cp -R build/HALO.app /Applications/
+./install.sh          # builds, installs to /Applications, verifies the signature
+```
+
+Launch at login only works from `/Applications` — `SMAppService` registers the
+app by its installed location — so use `install.sh` rather than running the
+build in place. Turn it on from the menu-bar item.
+
+To remove the app and everything it stored:
+
+```bash
+./uninstall.sh
 ```
 
 HALO has no Dock icon. It appears as a small item in the menu bar, which is
