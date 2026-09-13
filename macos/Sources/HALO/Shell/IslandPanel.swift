@@ -7,13 +7,16 @@ import SwiftUI
 /// frontmost app keeps focus while the island is used.
 final class IslandPanel: NSPanel {
     init(screen: NSScreen, content: NSView) {
+        // The designated initializer omits `screen:` — that variant is a
+        // convenience init and cannot be called from a subclass. contentRect is
+        // in global screen coordinates, so passing the screen's own frame
+        // places the panel on it; setFrame below re-asserts it.
         super.init(
             contentRect: screen.frame,
             // A non-activating panel: clicking it does not switch apps.
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
-            defer: false,
-            screen: screen
+            defer: false
         )
 
         isFloatingPanel = true
