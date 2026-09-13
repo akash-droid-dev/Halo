@@ -4,15 +4,20 @@ A notch-anchored companion surface for MacBooks with a camera housing. It stays
 quiet at rest, is glanceable during activity, and expands into focused module
 controls on hover or click.
 
-This repository is the web implementation of the `HALO.dc.html` interactive
-prototype, built to the token, state, motion, and architecture specification in
-the accompanying implementation brief.
+Built from the `HALO.dc.html` interactive prototype, to the token, state,
+motion, and architecture specification in the accompanying implementation
+brief.
+
+## Two things in this repository
+
+| | |
+| --- | --- |
+| [`macos/`](macos/) | **The native app you actually run.** One NSPanel per notched display, anchored to the measured camera housing, above the menu bar. Sandboxed with no network entitlement — see [macos/PRIVACY.md](macos/PRIVACY.md). |
+| `src/` | The web design reference below, which the native app was built from. It simulates a macOS desktop in a browser; it cannot overlay your real menu bar or read real system state. |
 
 ```bash
-npm install
-npm run dev      # http://localhost:5173
-npm run build    # typecheck + production bundle
-npm run lint
+cd macos && ./build.sh && open build/HALO.app   # the app
+npm install && npm run dev                      # the design reference
 ```
 
 ## What this is

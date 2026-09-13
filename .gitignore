@@ -4,3 +4,13 @@ dist/
 .DS_Store
 .vite/
 *.tsbuildinfo
+
+# Native macOS build output
+macos/build/
+macos/.build/
+*.app
+
+# Never commit anything captured from a real machine
+*.crash
+*.ips
+*.plist.export
