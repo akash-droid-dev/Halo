@@ -28,7 +28,8 @@ final class BatteryService {
         // Power state changes slowly; a 30s poll is plenty and keeps the app
         // close to idle.
         timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.read() }
+            guard let self else { return }
+            Task { @MainActor in self.read() }
         }
     }
 
