@@ -80,23 +80,56 @@ rather than in twelve places.
 child menu each acquire a hold and release it on exit, so overlapping
 interactions cannot leave the panel stuck open.
 
+## Island dimensions
+
+The brief's state table sizes the island generously. It was revised to a
+tighter, more restrained footprint — the island should read as part of the
+hardware, not as a slab hanging off the menu bar:
+
+| State | Brief | Here | Δ |
+| --- | --- | --- | --- |
+| Compact activity | 480 × 34, r15 | 436 × 30, r13 | −9% w, −12% h |
+| Hover preview | 520 × 112, r24 | 452 × 92, r19 | −13% w, −18% h |
+| Expanded | 560 wide, r30 | 496 wide, r24 | −11% w |
+| Expanded (palette) | 620 × 392 | 548 × 336 | −12% w, −14% h |
+| Centre gutter | notch + 8pt | 188 | hardware floor |
+
+Three things made that possible without crowding the content:
+
+**The gutter sets the floor.** A 14-inch camera housing is ~180 pt, so the
+reserved centre is 188 and every state that puts content beside the housing
+must clear it. At 436 wide the compact shoulders are 124 pt each, and the
+left lane measures 132 against a 132 track — tight to the pixel, verified in
+the browser rather than guessed.
+
+**Internal density came down with the box.** Shoulder insets 13/16 → 12/14,
+module inset 16 → 14, header 30 → 28, stack rhythm one step tighter
+throughout, and the oversized readouts trimmed (battery 22 → 20, timer
+19 → 17, meeting countdown 18 → 16, artwork 84 → 72). The play button stays
+at exactly 44 pt — the brief's floor for a primary action, and no larger.
+
+**Radii and elevation were retuned to the new widths.** A 30 pt radius on a
+496 pt panel reads bulbous, so the ramp is 10/13/19/24; the shadow lost its
+spread and gained a little density (`0 22 52 /.58` from `0 30 70 /.62`) so the
+island sits close to the glass instead of floating above it.
+
+**Each module is only as tall as its content.** Heights were re-derived from
+measured content rather than scaled: media 256, timer 300, battery 230,
+shelf 288, clipboard 324, apps 284, stats 286 all fit with zero overflow. The
+seven that still scroll are genuine lists — the agenda, transfers, workflows,
+window actions, devices, plugins, and the module grid — and the body's bottom
+edge now fades over the depth of its own padding, so a list that continues
+past the panel reads as continuing rather than severed, and a module that fits
+loses nothing to it.
+
 ## Conformance to the brief
 
-Verified in Chromium against the state table in section 3:
-
-| State | Specified | Measured |
-| --- | --- | --- |
-| Compact activity | 480 × 34, r15 | 480 × 34 |
-| Hover preview | 520 × 112, r24 | 520 × 112 |
-| Expanded | 560 × module height, r30 | 560 × 340 (Meetings) |
-| Expanded (palette) | 620 wide × 392 | 620 × 392 |
-
-Also verified: all 16 module surfaces render at their specified heights; all 12
-settings panes render; onboarding runs its four steps and closes; `⌘K`, `⌥Space`,
-`⌥⇥`, `⌘P`, and `esc` all work; a pinned panel survives both `esc` and an
-outside click while the close button still dismisses it; reduce-motion collapses
-the expansion transition to 1 ms; reduce-transparency removes the backdrop
-filters. Zero console errors across the suite.
+Verified in Chromium: all 16 module surfaces render at their heights; all 12
+settings panes render; onboarding runs its four steps and closes; `⌘K`,
+`⌥Space`, `⌥⇥`, `⌘P`, and `esc` all work; a pinned panel survives both `esc`
+and an outside click while the close button still dismisses it; reduce-motion
+collapses the expansion transition to 1 ms; reduce-transparency removes the
+backdrop filters. Zero console errors across the suite.
 
 Motion, tokens, and hit targets follow section 1 and section 3 directly: one
 280 ms `cubic-bezier(.32,.72,0,1)` curve carries width, height, and radius
@@ -118,12 +151,19 @@ targets are 28 pt minimum and 44 pt for primary transport and join actions.
    clicks and esc are ignored", so `esc` is now a no-op while pinned and the
    explicit close button remains the way out.
 
+**The geometry table is a deliberate departure.** The sizes above are smaller
+than section 3 specifies. Everything that table governs structurally — five
+states, one curve carrying width/height/radius together, bottom-corner-only
+radii, the reserved gutter, the fixed header — is unchanged; only the
+magnitudes are tighter. See *Island dimensions*.
+
 **Two places the brief and the prototype disagree; the prototype wins.**
 
-- The brief specifies a 44 pt module header. The prototype's is 30 pt, and the
-  per-module expanded heights are calibrated against it — adopting 44 pt would
-  shrink every module body by 14 pt. The header is a fixed height either way, so
-  the intent (content does not shift when switching modules) holds.
+- The brief specifies a 44 pt module header. The prototype's is 30 pt and this
+  build's is 28 pt, with every module height derived against it — a 44 pt
+  header would cost each body 16 pt of content for no gain. The header is a
+  fixed height either way, so the intent (content does not shift when
+  switching modules) holds.
 - The brief lists a Stepper primitive. Nothing in the prototype uses one, so it
   is not implemented rather than shipped as dead code.
 

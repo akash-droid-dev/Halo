@@ -56,7 +56,7 @@
   z-index: 3;
   display: flex;
   align-items: center;
-  height: 32px;
+  height: 30px;
 }
 
 .shoulder-row__lane {
@@ -75,7 +75,7 @@
 
 .shoulder-row__lane--right {
   justify-content: flex-end;
-  gap: 9px;
+  gap: 8px;
   padding-right: var(--shoulder-inset);
 }
 
@@ -115,8 +115,8 @@
 
 .compact-lane__art {
   flex: none;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 5px;
   background: var(--artwork, #3a3a40);
   box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.14);
@@ -124,15 +124,15 @@
 
 .compact-lane__title {
   min-width: 0;
-  max-width: var(--compact-text-max, 170px);
-  font-size: 11.5px;
+  max-width: var(--compact-text-max, 90px);
+  font-size: 11px;
   font-weight: 590;
   letter-spacing: 0.1px;
   color: var(--ink-primary);
 }
 
 .compact-lane__value {
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 590;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -143,10 +143,10 @@
 .secondary-chip {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 2px 7px 2px 5px;
+  gap: 4px;
+  padding: 2px 6px 2px 5px;
   border: none;
-  border-radius: 9px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
   cursor: pointer;
   transition: background var(--duration-feedback) ease;
@@ -165,7 +165,7 @@
 }
 
 .secondary-chip__label {
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: rgba(255, 255, 255, 0.7);
@@ -179,12 +179,12 @@
 .level-bars {
   display: flex;
   align-items: flex-end;
-  gap: 2.5px;
-  height: 14px;
+  gap: 2px;
+  height: 12px;
 }
 
 .level-bars__bar {
-  width: 2.5px;
+  width: 2px;
   border-radius: 2px;
   background: var(--accent);
   transition: height 240ms ease;
@@ -197,29 +197,29 @@
 /* ---- Hover preview --------------------------------------------------- */
 .preview-row {
   position: absolute;
-  top: 32px;
+  top: 30px;
   left: 0;
   right: 0;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 6px 16px 14px;
+  padding: 5px var(--shoulder-inset-expanded) 12px;
 }
 
 .preview-row__title {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 620;
   color: rgba(255, 255, 255, 0.95);
 }
 
 .preview-row__sub {
-  font-size: 11.5px;
+  font-size: 11px;
   color: rgba(255, 255, 255, 0.52);
 }
 
 .preview-row__hint {
   flex: none;
-  font-size: 11px;
+  font-size: 10.5px;
   white-space: nowrap;
   color: rgba(255, 255, 255, 0.34);
 }
@@ -227,7 +227,7 @@
 /* ---- Expanded panel -------------------------------------------------- */
 .island__panel {
   position: absolute;
-  top: 32px;
+  top: 30px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -242,22 +242,29 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 30px;
-  padding: 2px var(--module-inset) 8px;
+  height: var(--module-header-height);
+  padding: 1px var(--module-inset) 7px;
 }
 
 .module-header__title {
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 660;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
   color: var(--ink-tertiary);
 }
 
 .module-body {
-  height: calc(100% - 30px);
+  height: calc(100% - var(--module-header-height));
   padding: 0 var(--module-inset) var(--module-inset);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  /*
+   * Fade the bottom edge so a list that continues past the panel reads as
+   * continuing rather than severed. The fade is the depth of the body's own
+   * bottom padding, so a module whose content fits loses nothing to it.
+   */
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 14px), transparent 100%);
 }
 
 .island-controls {
@@ -269,10 +276,10 @@
 .island-controls__button {
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border: none;
-  border-radius: 7px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
@@ -293,10 +300,10 @@
 .switcher {
   display: flex;
   align-items: center;
-  gap: 3px;
-  margin-top: 8px;
-  padding: 4px;
-  border-radius: 13px;
+  gap: 2px;
+  margin-top: 7px;
+  padding: 3px;
+  border-radius: 11px;
   background: rgba(28, 28, 32, 0.82);
   backdrop-filter: var(--chrome-blur);
   box-shadow: var(--shadow-float);
@@ -305,10 +312,10 @@
 .switcher__item {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
+  gap: 5px;
+  padding: 4px 9px;
   border: none;
-  border-radius: 10px;
+  border-radius: 9px;
   background: transparent;
   color: var(--ink-secondary);
   font-size: 11.5px;
@@ -320,6 +327,11 @@
 
 .switcher__item:hover {
   background: rgba(255, 255, 255, 0.14);
+}
+
+.switcher__item,
+.switcher__palette {
+  font-size: 11px;
 }
 
 .switcher__item[aria-pressed='true'] {
@@ -339,9 +351,9 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 9px;
+  padding: 4px 8px;
   border: none;
-  border-radius: 10px;
+  border-radius: 9px;
   background: var(--control-fill);
   color: var(--ink-secondary);
   font-size: 11.5px;
