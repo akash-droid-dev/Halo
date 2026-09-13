@@ -1,0 +1,354 @@
+/*
+ * The island owns geometry, radius, shadow, and the shoulder layout that keeps
+ * content clear of the camera housing. It is the single source of the
+ * expansion animation.
+ */
+.island-anchor {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.island {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-island);
+  /* Bottom corners only — the top edge is continuous with the screen bezel. */
+  border-radius: 0 0 var(--island-radius) var(--island-radius);
+  box-shadow: var(--island-shadow);
+  cursor: default;
+  /*
+   * Width, height and radius animate together on one curve so the silhouette
+   * never breaks. Under reduced motion the durations collapse to 1ms.
+   */
+  transition:
+    width var(--duration-expand) var(--ease-spring),
+    height var(--duration-expand) var(--ease-spring),
+    border-radius var(--duration-expand) var(--ease-spring);
+}
+
+/* On a display without a notch the island floats below the menu bar. */
+.island--notchless {
+  border-radius: var(--island-radius);
+  margin-top: 6px;
+}
+
+/* One inset highlight reads as the glass edge. */
+.island__edge {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: var(--glass-edge);
+}
+
+/* ---- Shoulders ------------------------------------------------------- */
+.shoulder-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  height: 32px;
+}
+
+.shoulder-row__lane {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  height: 100%;
+  overflow: hidden;
+}
+
+.shoulder-row__lane--left {
+  gap: 8px;
+  padding-left: var(--shoulder-inset);
+}
+
+.shoulder-row__lane--right {
+  justify-content: flex-end;
+  gap: 9px;
+  padding-right: var(--shoulder-inset);
+}
+
+/* The reserved centre gutter: measured notch width plus 8pt. */
+.shoulder-row__gutter {
+  flex: none;
+  height: 100%;
+}
+
+.island-rest-dot {
+  width: 6px;
+  height: 6px;
+  margin-left: 2px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.85;
+}
+
+/* ---- Compact activity ------------------------------------------------ */
+.compact-lane {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.compact-lane--right {
+  gap: 9px;
+}
+
+.compact-lane__art {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  background: var(--artwork, #3a3a40);
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.14);
+}
+
+.compact-lane__title {
+  min-width: 0;
+  max-width: var(--compact-text-max, 170px);
+  font-size: 11.5px;
+  font-weight: 590;
+  letter-spacing: 0.1px;
+  color: var(--ink-primary);
+}
+
+.compact-lane__value {
+  font-size: 11.5px;
+  font-weight: 590;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* The secondary activity chip — one click away from the primary slot. */
+.secondary-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px 2px 5px;
+  border: none;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: background var(--duration-feedback) ease;
+}
+
+.secondary-chip:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.secondary-chip__dot {
+  width: 5px;
+  height: 5px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--chip-color);
+}
+
+.secondary-chip__label {
+  font-size: 10.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* An unhandled urgent event pulses; reduced motion makes it a static outline. */
+.secondary-chip--urgent .secondary-chip__dot {
+  animation: halo-ring 2s ease-in-out infinite;
+}
+
+.level-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 14px;
+}
+
+.level-bars__bar {
+  width: 2.5px;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: height 240ms ease;
+}
+
+:root[data-reduce-motion='true'] .level-bars__bar {
+  transition: none;
+}
+
+/* ---- Hover preview --------------------------------------------------- */
+.preview-row {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 16px 14px;
+}
+
+.preview-row__title {
+  font-size: 13px;
+  font-weight: 620;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.preview-row__sub {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.preview-row__hint {
+  flex: none;
+  font-size: 11px;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+/* ---- Expanded panel -------------------------------------------------- */
+.island__panel {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+/*
+ * Fixed header height so the body does not shift when switching modules.
+ * Module switches keep the header in place and animate only the body.
+ */
+.module-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 2px var(--module-inset) 8px;
+}
+
+.module-header__title {
+  font-size: 11px;
+  font-weight: 660;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+}
+
+.module-body {
+  height: calc(100% - 30px);
+  padding: 0 var(--module-inset) var(--module-inset);
+  overflow-y: auto;
+}
+
+.island-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.island-controls__button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: background var(--duration-feedback) ease;
+}
+
+.island-controls__button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.island-controls__button[data-active='true'] {
+  background: rgba(10, 132, 255, 0.9);
+  color: #fff;
+}
+
+/* ---- Module switcher ------------------------------------------------- */
+/* A rail of the live activities, and the target of ⌥⇥. */
+.switcher {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 8px;
+  padding: 4px;
+  border-radius: 13px;
+  background: rgba(28, 28, 32, 0.82);
+  backdrop-filter: var(--chrome-blur);
+  box-shadow: var(--shadow-float);
+}
+
+.switcher__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-secondary);
+  font-size: 11.5px;
+  font-weight: 580;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--duration-feedback) ease;
+}
+
+.switcher__item:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.switcher__item[aria-pressed='true'] {
+  background: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.switcher__dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--dot-color);
+}
+
+.switcher__palette {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 9px;
+  border: none;
+  border-radius: 10px;
+  background: var(--control-fill);
+  color: var(--ink-secondary);
+  font-size: 11.5px;
+  font-weight: 580;
+  cursor: pointer;
+}
+
+.switcher__palette:hover {
+  background: rgba(255, 255, 255, 0.14);
+}

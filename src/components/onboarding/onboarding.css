@@ -1,0 +1,159 @@
+.onboarding {
+  position: absolute;
+  left: 50%;
+  top: 120px;
+  z-index: 96;
+  width: min(520px, calc(100% - 48px));
+  overflow: hidden;
+  transform: translateX(-50%);
+  border-radius: 14px;
+  background: var(--window-bg);
+  backdrop-filter: var(--window-blur);
+  box-shadow:
+    0 40px 90px rgba(0, 0, 0, 0.62),
+    0 0 0 0.5px rgba(255, 255, 255, 0.14);
+}
+
+.onboarding__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 24px 18px;
+}
+
+.onboarding__progress {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.onboarding__progress-bar {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.14);
+  transition: background 240ms ease;
+}
+
+.onboarding__progress-bar[data-reached='true'] {
+  background: var(--accent-system);
+}
+
+.onboarding__step {
+  font-size: 11px;
+  font-weight: 640;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+}
+
+.onboarding__title {
+  font-size: 21px;
+  font-weight: 660;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
+  color: var(--ink-primary);
+}
+
+.onboarding__text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+/* A miniature of the island, so step one can point at the real thing. */
+.onboarding__stage {
+  position: relative;
+  height: 104px;
+  overflow: hidden;
+  border: 0.5px solid var(--hairline-soft);
+  border-radius: 11px;
+  background: linear-gradient(170deg, #242432, #14141c);
+}
+
+.onboarding__notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 132px;
+  height: 22px;
+  transform: translateX(-50%);
+  border-radius: 0 0 9px 9px;
+  background: #000;
+}
+
+.onboarding__hint {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  transform: translateX(-50%);
+  border: 0.5px solid var(--hairline-strong);
+  border-radius: 11px;
+  background: rgba(0, 0, 0, 0.75);
+  font-size: 10.5px;
+  color: var(--ink-secondary);
+}
+
+.onboarding__hint-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-media);
+  animation: halo-ring 2s ease-in-out infinite;
+}
+
+.onboarding__perm {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border: 0.5px solid var(--hairline);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.onboarding__perm-why {
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--ink-meta);
+}
+
+.onboarding__tip {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.045);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.onboarding__footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 20px;
+  border-top: 0.5px solid var(--hairline);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.onboarding__skip {
+  padding: 8px 14px;
+  border: none;
+  border-radius: var(--radius-control-lg);
+  background: transparent;
+  color: var(--ink-secondary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 570;
+  cursor: pointer;
+}
+
+.onboarding__skip:hover {
+  color: var(--ink-primary);
+}

@@ -1,0 +1,145 @@
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #0b0b0d;
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Every interactive element draws its focus ring outside itself. */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+a {
+  color: var(--accent-system);
+  text-decoration: none;
+}
+
+a:hover {
+  color: #409cff;
+  text-decoration: underline;
+}
+
+/* Numeric readouts use tabular figures so timers do not jitter. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* One-line truncation with a tail ellipsis. */
+.truncate {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+@keyframes halo-ring {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.35;
+  }
+}
+
+@keyframes halo-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*
+ * Content cross-fades with a 6pt upward offset, starting 60ms into the
+ * geometry change so text never appears to stretch.
+ */
+.halo-enter {
+  animation: halo-fade var(--duration-toast) ease;
+}
+
+:root[data-reduce-motion="true"] .halo-enter {
+  animation-duration: var(--duration-content);
+  animation-name: halo-opacity;
+}
+
+@keyframes halo-opacity {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* The urgent-event pulse becomes a static outline under reduced motion. */
+:root[data-reduce-motion="true"] .halo-pulse {
+  animation: none !important;
+  box-shadow: 0 0 0 1.5px currentColor;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
