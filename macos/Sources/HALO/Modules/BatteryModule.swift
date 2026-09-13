@@ -61,6 +61,7 @@ final class BatteryModule: Module {
     }
 }
 
+@MainActor
 private struct BatteryModuleView: View {
     let service: BatteryService
 

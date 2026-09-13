@@ -65,7 +65,12 @@ jobs:
 
       - name: Build
         working-directory: macos
-        run: swift build -c debug 2>&1 | tee build.log
+        shell: bash
+        run: |
+          # pipefail is essential: `swift build | tee` otherwise reports tee's
+          # exit status, and a failing compile reads as a green job.
+          set -eo pipefail
+          swift build -c debug 2>&1 | tee build.log
 
       - name: Upload build log
         if: always()

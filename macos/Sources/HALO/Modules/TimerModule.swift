@@ -173,6 +173,7 @@ final class TimerModule: Module {
     func expandedView() -> AnyView { AnyView(TimerModuleView(module: self)) }
 }
 
+@MainActor
 private struct TimerModuleView: View {
     let module: TimerModule
     private let presets: [Double] = [5, 10, 25, 50]

@@ -39,6 +39,10 @@ struct IslandGeometry {
 
 /// The island shell: geometry, radius, shadow, and the shoulder layout that
 /// keeps content clear of the camera housing.
+///
+/// `@MainActor` because `View.body` is nonisolated by default, and everything
+/// this reads — AppState, the scheduler, the modules — is main-actor isolated.
+@MainActor
 struct IslandView: View {
     let state: AppState
     let geometry: NotchGeometry
