@@ -65,7 +65,8 @@ final class TimerModule: Module {
         now = .now
         guard ticker == nil else { return }
         ticker = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.tick() }
+            guard let self else { return }
+            Task { @MainActor in self.tick() }
         }
     }
 

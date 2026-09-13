@@ -35,7 +35,8 @@ final class HALOApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         // One cheap pass to keep the queue in step with the modules.
         queueTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.state.refreshQueue() }
+            guard let self else { return }
+            Task { @MainActor in self.state.refreshQueue() }
         }
     }
 

@@ -20,7 +20,8 @@ final class PanelController {
                 object: nil,
                 queue: .main
             ) { [weak self] _ in
-                Task { @MainActor in self?.rebuild() }
+                guard let self else { return }
+                Task { @MainActor in self.rebuild() }
             }
         )
 
@@ -32,11 +33,12 @@ final class PanelController {
                 object: nil,
                 queue: .main
             ) { [weak self] _ in
+                guard let self else { return }
                 Task { @MainActor in
-                    self?.state.batteryService.read()
-                    for module in self?.state.modules ?? [] { module.activate() }
-                    self?.state.refreshQueue()
-                    self?.rebuild()
+                    self.state.batteryService.read()
+                    for module in self.state.modules { module.activate() }
+                    self.state.refreshQueue()
+                    self.rebuild()
                 }
             }
         )
