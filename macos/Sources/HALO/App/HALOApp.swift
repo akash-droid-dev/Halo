@@ -4,12 +4,13 @@ import SwiftUI
 
 @main
 @MainActor
-final class HALOApp: NSObject, NSApplicationDelegate {
+final class HALOApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var state: AppState!
     private var panels: PanelController!
     private var hotkeys: GlobalHotkeys!
     private var queueTimer: Timer?
     private var statusItem: NSStatusItem?
+    private var loginItemMenuItem: NSMenuItem?
 
     /// `NSApplication.delegate` is a weak reference, so the delegate has to be
     /// owned by something that outlives `main()`.
@@ -55,12 +56,26 @@ final class HALOApp: NSObject, NSApplicationDelegate {
         )
 
         let menu = NSMenu()
+        menu.delegate = self
         menu.addItem(
             withTitle: "Open Island",
             action: #selector(openIsland),
             keyEquivalent: ""
         ).target = self
+
         menu.addItem(.separator())
+
+        let login = NSMenuItem(
+            title: "Launch at Login",
+            action: #selector(toggleLoginItem),
+            keyEquivalent: ""
+        )
+        login.target = self
+        menu.addItem(login)
+        loginItemMenuItem = login
+
+        menu.addItem(.separator())
+
         let offline = NSMenuItem(
             title: "Offline by design — no network access",
             action: nil,
@@ -68,6 +83,7 @@ final class HALOApp: NSObject, NSApplicationDelegate {
         )
         offline.isEnabled = false
         menu.addItem(offline)
+
         menu.addItem(.separator())
         menu.addItem(
             withTitle: "Quit HALO",
@@ -80,6 +96,31 @@ final class HALOApp: NSObject, NSApplicationDelegate {
 
     @objc private func openIsland() {
         state.open()
+    }
+
+    @objc private func toggleLoginItem() {
+        do {
+            try LoginItem.setEnabled(!LoginItem.isEnabled)
+        } catch {
+            // The user can also revoke this in System Settings; surfacing the
+            // real status is more useful than insisting on ours.
+            NSLog("HALO: login item change failed — %@", error.localizedDescription)
+        }
+        refreshLoginItemMenu()
+    }
+
+    private func refreshLoginItemMenu() {
+        loginItemMenuItem?.state = LoginItem.isEnabled ? .on : .off
+        loginItemMenuItem?.toolTip = LoginItem.statusDescription
+        // Not installed in /Applications: registration cannot succeed, so do
+        // not offer a control that will silently fail.
+        loginItemMenuItem?.isEnabled = !LoginItem.statusDescription.contains("unavailable")
+    }
+
+    // MARK: NSMenuDelegate
+
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        refreshLoginItemMenu()
     }
 
     /// Registered hotkeys, not an event tap: HALO never needs Accessibility

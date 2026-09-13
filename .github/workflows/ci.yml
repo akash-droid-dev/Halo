@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Never let a stale run gate a newer push.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    name: Design reference (lint, types, build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npx tsc -b --noEmit
+
+      - name: Build
+        run: npm run build
+
+      - name: Assert the bundle has no external origins
+        # The design reference must stay self-contained: no CDN, no fonts, no
+        # analytics. Anything with a scheme that is not an XML namespace or a
+        # sample string is a regression.
+        run: |
+          set -euo pipefail
+          found=$(grep -ohE "https?://[a-zA-Z0-9._/-]+" dist/assets/*.js dist/assets/*.css dist/index.html \
+            | sort -u \
+            | grep -vE "^https?://www\.w3\.org/" \
+            | grep -vE "^https://developer\.apple\.com/design/" \
+            | grep -vE "^https://reactjs\.org/docs/error-decoder" || true)
+          if [ -n "$found" ]; then
+            echo "Unexpected external origin(s) in the bundle:" >&2
+            echo "$found" >&2
+            exit 1
+          fi
+          echo "No unexpected external origins."
+
+  macos:
+    name: Native app (compile)
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Swift version
+        run: swift --version
+
+      - name: Build
+        working-directory: macos
+        run: swift build -c debug 2>&1 | tee build.log
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: swift-build-log
+          path: macos/build.log
+          if-no-files-found: ignore
+
+  privacy:
+    name: Privacy invariants
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: The app must never request a network entitlement
+        # This is the one check that must never be allowed to fail quietly:
+        # the offline guarantee is the absence of this entitlement.
+        run: |
+          set -euo pipefail
+          # Match a real <key> element only. The file explains in prose why
+          # the network entitlement is absent, so a bare substring grep would
+          # match its own documentation.
+          if grep -qE "<key>[[:space:]]*com\\.apple\\.security\\.network" macos/HALO.entitlements; then
+            echo "FAIL: a network entitlement appears in HALO.entitlements." >&2
+            grep -nE "<key>[[:space:]]*com\\.apple\\.security\\.network" macos/HALO.entitlements >&2
+            exit 1
+          fi
+          if ! grep -qE "<key>[[:space:]]*com\\.apple\\.security\\.app-sandbox" macos/HALO.entitlements; then
+            echo "FAIL: the app-sandbox entitlement is missing." >&2
+            exit 1
+          fi
+          echo "Sandbox on, no network entitlement."
+
+      - name: No networking APIs in the native sources
+        run: |
+          set -euo pipefail
+          hits=$(grep -rInE "URLSession|NSURLConnection|CFSocket|CFStream|Network\.framework|NWConnection|getaddrinfo|\bsocket\(" macos/Sources || true)
+          if [ -n "$hits" ]; then
+            echo "FAIL: networking API referenced in the native sources:" >&2
+            echo "$hits" >&2
+            exit 1
+          fi
+          echo "No networking APIs referenced."
+
+      - name: No analytics or telemetry dependency
+        run: |
+          set -euo pipefail
+          hits=$(grep -riE "sentry|mixpanel|posthog|segment\.io|datadog|bugsnag|amplitude|google-analytics" \
+            package.json macos/Package.swift || true)
+          if [ -n "$hits" ]; then
+            echo "FAIL: telemetry dependency found:" >&2
+            echo "$hits" >&2
+            exit 1
+          fi
+          echo "No telemetry dependencies."
