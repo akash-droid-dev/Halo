@@ -52,8 +52,8 @@
     Helvetica, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 
-  --text-island-title: 600 13px / 1.25 var(--font-ui);
-  --text-module-title: 650 15px / 1.25 var(--font-ui);
+  --text-island-title: 600 12.5px / 1.25 var(--font-ui);
+  --text-module-title: 650 14px / 1.3 var(--font-ui);
   --text-body: 400 12px / 1.45 var(--font-ui);
   --text-meta: 400 11px / 1.45 var(--font-ui);
   /* Labels are 9.5pt medium, uppercase, 0.05em tracking. */
@@ -69,29 +69,31 @@
   --space-6: 24px;
 
   /* The island keeps content clear of the camera housing. */
-  --shoulder-inset-collapsed: 13px;
-  --shoulder-inset-expanded: 16px;
-  --module-inset: 16px;
-  --row-height-comfortable: 36px;
-  --row-height-compact: 30px;
+  --shoulder-inset-collapsed: 12px;
+  --shoulder-inset-expanded: 14px;
+  --module-inset: 14px;
+  --row-height-comfortable: 34px;
+  --row-height-compact: 28px;
+  /* Fixed header height, so the body does not shift between modules. */
+  --module-header-height: 28px;
 
   /* ---- Radii — bottom corners only on a notched display --------------- */
-  --radius-rest: 11px;
-  --radius-compact: 15px;
-  --radius-preview: 24px;
-  --radius-expanded: 30px;
-  --radius-card: 10px;
-  --radius-card-lg: 12px;
-  --radius-control: 8px;
-  --radius-control-lg: 9px;
+  --radius-rest: 10px;
+  --radius-compact: 13px;
+  --radius-preview: 19px;
+  --radius-expanded: 24px;
+  --radius-card: 9px;
+  --radius-card-lg: 11px;
+  --radius-control: 7px;
+  --radius-control-lg: 8px;
   --radius-pill: 999px;
 
   /* ---- Elevation ------------------------------------------------------ */
-  --shadow-collapsed: 0 4px 14px rgba(0, 0, 0, 0.4);
-  --shadow-expanded: 0 30px 70px rgba(0, 0, 0, 0.62), 0 2px 10px rgba(0, 0, 0, 0.5);
-  --shadow-window: 0 40px 90px rgba(0, 0, 0, 0.6), 0 0 0 0.5px rgba(255, 255, 255, 0.14);
-  --shadow-panel: 0 24px 60px rgba(0, 0, 0, 0.55), inset 0 0 0 0.5px rgba(255, 255, 255, 0.13);
-  --shadow-float: 0 14px 34px rgba(0, 0, 0, 0.45), inset 0 0 0 0.5px rgba(255, 255, 255, 0.12);
+  --shadow-collapsed: 0 3px 12px rgba(0, 0, 0, 0.46);
+  --shadow-expanded: 0 22px 52px rgba(0, 0, 0, 0.58), 0 2px 8px rgba(0, 0, 0, 0.48);
+  --shadow-window: 0 32px 74px rgba(0, 0, 0, 0.58), 0 0 0 0.5px rgba(255, 255, 255, 0.14);
+  --shadow-panel: 0 20px 50px rgba(0, 0, 0, 0.52), inset 0 0 0 0.5px rgba(255, 255, 255, 0.13);
+  --shadow-float: 0 12px 30px rgba(0, 0, 0, 0.44), inset 0 0 0 0.5px rgba(255, 255, 255, 0.12);
   /* One inset top highlight reads as the glass edge. */
   --glass-edge: inset 0 -0.5px 0 rgba(255, 255, 255, 0.1),
     inset 0.5px 0 0 rgba(255, 255, 255, 0.05),

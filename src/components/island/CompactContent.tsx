@@ -39,7 +39,7 @@ export function CompactLeft({
         />
       ) : Glyph ? (
         <span style={{ color: accent, display: 'flex', flex: 'none' }}>
-          <Glyph size={19} />
+          <Glyph size={17} />
         </span>
       ) : null}
       <span className="compact-lane__title truncate">{text}</span>
@@ -63,8 +63,8 @@ export function CompactRight({ text, accent, ring, bars, onOpen }: CompactRightP
     <button type="button" className="compact-lane compact-lane--right halo-enter" onClick={onOpen}>
       {ring && (
         <svg
-          width={18}
-          height={18}
+          width={16}
+          height={16}
           viewBox="0 0 24 24"
           style={{ flex: 'none', transform: 'rotate(-90deg)' }}
           aria-hidden

@@ -41,26 +41,28 @@ export const TITLES: Record<SurfaceId, string> = {
 };
 
 /**
- * Expanded height per surface. Width is fixed at 560 (620 for the palette) so
- * only the height varies between modules.
+ * Expanded height per surface. Width is fixed at 496 (548 for the palette) so
+ * only the height varies between modules. Each value is the height at which
+ * that module's content sits without slack — the panel is only ever as tall as
+ * the module needs.
  */
 export const HEIGHTS: Record<SurfaceId, number> = {
-  media: 300,
-  timer: 352,
-  battery: 250,
-  meeting: 340,
-  download: 300,
-  shelf: 340,
-  palette: 392,
-  clipboard: 380,
-  workflow: 352,
-  windows: 330,
-  stats: 326,
-  devices: 330,
-  plugins: 368,
-  ai: 330,
-  apps: 300,
-  home: 260,
+  media: 256,
+  timer: 300,
+  battery: 230,
+  meeting: 288,
+  download: 256,
+  shelf: 288,
+  palette: 336,
+  clipboard: 324,
+  workflow: 300,
+  windows: 280,
+  stats: 286,
+  devices: 280,
+  plugins: 312,
+  ai: 280,
+  apps: 284,
+  home: 254,
 };
 
 /** Switcher and palette order. */
@@ -128,17 +130,29 @@ export const AUDIO_OUTPUTS = [
   'Studio Display',
 ] as const;
 
-/** Island geometry per state — size and radius animate together. */
+/**
+ * Island geometry per state — size and radius animate together.
+ *
+ * Every state is held as close to the camera housing as its content allows:
+ * the collapsed bar is only as wide as one glyph, a title, and a value need
+ * beside the gutter, and each radius is tuned to its own width so the
+ * silhouette reads as one continuous curve rather than a rounded rectangle.
+ */
 export const GEOMETRY = {
-  rest: { w: 216, h: 32, r: 11 },
-  compact: { w: 480, h: 34, r: 15 },
-  preview: { w: 520, h: 112, r: 24 },
-  expanded: { w: 560, h: 320, r: 30 },
-  paletteWidth: 620,
+  rest: { w: 212, h: 30, r: 10 },
+  compact: { w: 436, h: 30, r: 13 },
+  preview: { w: 452, h: 92, r: 19 },
+  expanded: { w: 496, h: 288, r: 24 },
+  paletteWidth: 548,
 } as const;
 
-/** The reserved centre gutter: the measured notch width plus 8pt. */
-export const NOTCH_GUTTER = 200;
+/**
+ * The reserved centre gutter: the measured notch width plus 8pt. A 14-inch
+ * MacBook Pro housing is ~180pt, so 188 is the hardware floor — this is the
+ * one island dimension that is not a style choice, and it sets the minimum
+ * width of every state that puts content beside the housing.
+ */
+export const NOTCH_GUTTER = 188;
 
 export const SHOULDER_HEIGHT = 32;
 

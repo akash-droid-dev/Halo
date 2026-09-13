@@ -81,7 +81,7 @@ export function Island({ notched = true }: { notched?: boolean }) {
                   text={copy.left}
                   accent={accent}
                   trackIx={state.trackIx}
-                  maxWidth={isCompact ? '104px' : '170px'}
+                  maxWidth={isCompact ? '82px' : '90px'}
                   onOpen={() => open(surface)}
                 />
               )}
