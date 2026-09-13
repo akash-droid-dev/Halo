@@ -9,6 +9,11 @@ the design reference it was built from.
 Selling it later: [DISTRIBUTION.md](DISTRIBUTION.md) — read the structural
 blocker at the top before spending anything.
 
+Every pull request compiles this on a `macos-14` runner, so the build is
+verified continuously rather than only on whichever machine last touched it.
+CI also fails the build if the offline guarantee is ever weakened — see
+[PRIVACY.md](PRIVACY.md).
+
 ## Requirements
 
 - macOS 14 or later
