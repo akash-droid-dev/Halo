@@ -40,7 +40,10 @@ export function HaloProvider({ children }: { children: ReactNode }) {
   latest.current = state;
 
   const hoverTimer = useRef<number | undefined>(undefined);
-  const workflowTimer = useRef<number | undefined>(undefined);
+  /** One interval per running workflow, so concurrent runs do not evict each
+   *  other. A single shared handle left the first workflow stuck at its last
+   *  reported progress forever. */
+  const workflowTimers = useRef<Map<string, number>>(new Map());
   const aiTimer = useRef<number | undefined>(undefined);
 
   // ---- derived snapshot -------------------------------------------------
@@ -132,12 +135,19 @@ export function HaloProvider({ children }: { children: ReactNode }) {
       if (!workflow) return;
       dispatch({ type: 'workflowStart', id });
 
-      if (workflowTimer.current !== undefined) window.clearInterval(workflowTimer.current);
-      workflowTimer.current = window.setInterval(() => {
+      const existing = workflowTimers.current.get(id);
+      if (existing !== undefined) window.clearInterval(existing);
+
+      const handle = window.setInterval(() => {
+        const stop = () => {
+          const own = workflowTimers.current.get(id);
+          if (own !== undefined) window.clearInterval(own);
+          workflowTimers.current.delete(id);
+        };
+
         const current = latest.current.workflows.find((w) => w.id === id);
         if (!current || current.status !== 'running') {
-          window.clearInterval(workflowTimer.current);
-          workflowTimer.current = undefined;
+          stop();
           return;
         }
         const next = current.pct + WORKFLOW_STEP;
@@ -146,8 +156,7 @@ export function HaloProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        window.clearInterval(workflowTimer.current);
-        workflowTimer.current = undefined;
+        stop();
 
         // `w3` is the seeded failure case in the demo scene.
         const ok = id !== 'w3';
@@ -165,6 +174,8 @@ export function HaloProvider({ children }: { children: ReactNode }) {
           ok ? '#30D158' : '#FF453A',
         );
       }, WORKFLOW_INTERVAL);
+
+      workflowTimers.current.set(id, handle);
     },
     [addTimer, toast],
   );
@@ -244,7 +255,8 @@ export function HaloProvider({ children }: { children: ReactNode }) {
   useEffect(
     () => () => {
       if (hoverTimer.current !== undefined) window.clearTimeout(hoverTimer.current);
-      if (workflowTimer.current !== undefined) window.clearInterval(workflowTimer.current);
+      for (const handle of workflowTimers.current.values()) window.clearInterval(handle);
+      workflowTimers.current.clear();
       if (aiTimer.current !== undefined) window.clearInterval(aiTimer.current);
     },
     [],
