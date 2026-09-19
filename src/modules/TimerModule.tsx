@@ -1,5 +1,6 @@
 import { fmtLong } from '../lib/format';
 import { useHalo, useHaloApi } from '../state/context';
+import { useCollapseHold } from '../lib/useCollapseHold';
 import { timerRemaining } from '../state/selectors';
 import { Toggle } from '../components/primitives/Toggle';
 import { PauseIcon, PlayIcon, ResetIcon } from '../components/primitives/Icon';
@@ -11,7 +12,8 @@ const RING = 100.5;
 /** Named timers, presets, and work/break cycles. */
 export function TimerModule() {
   const { state } = useHalo();
-  const { dispatch, addTimer, hold, release } = useHaloApi();
+  const { dispatch, addTimer } = useHaloApi();
+  const { hold, release } = useCollapseHold();
 
   return (
     <div className="module-stack">

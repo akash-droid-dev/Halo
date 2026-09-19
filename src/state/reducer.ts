@@ -185,6 +185,11 @@ export function haloReducer(state: HaloState, action: Action): HaloState {
         forced: null,
         paletteQuery: '',
         paletteSel: 0,
+        // Collapsing destroys the expanded content, so every hold that content
+        // held is void. React does not call onBlur when a focused field
+        // unmounts, so without this reset the palette's autofocused input
+        // leaks a hold and no later collapse ever passes the guard.
+        hold: 0,
       };
 
     case 'togglePin':

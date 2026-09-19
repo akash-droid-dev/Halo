@@ -1,5 +1,6 @@
 import { AUDIO_OUTPUTS, TRACKS } from '../state/constants';
 import { useHalo, useHaloApi } from '../state/context';
+import { useCollapseHold } from '../lib/useCollapseHold';
 import { artworkGradient } from '../state/selectors';
 import { EmptyState } from '../components/primitives/EmptyState';
 import { Scrubber } from '../components/primitives/Scrubber';
@@ -19,7 +20,8 @@ import {
  */
 export function MediaModule() {
   const { state, mediaPos } = useHalo();
-  const { dispatch, toast, hold, release } = useHaloApi();
+  const { dispatch, toast } = useHaloApi();
+  const { hold, release } = useCollapseHold();
   const track = TRACKS[state.trackIx] ?? TRACKS[0]!;
   const { media } = state;
 
