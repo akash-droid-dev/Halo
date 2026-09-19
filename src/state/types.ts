@@ -35,11 +35,32 @@ export type ActivityKind =
   | 'shelf'
   | 'workflow';
 
+/**
+ * The priority bands the user can reorder in Settings. The strings match the
+ * labels shown there, because that list is the configured order.
+ */
+export type PriorityBand =
+  | 'Urgent events'
+  | 'Calls & meetings'
+  | 'Timers & transfers'
+  | 'Media'
+  | 'Passive system info';
+
+export const PRIORITY_BANDS: PriorityBand[] = [
+  'Urgent events',
+  'Calls & meetings',
+  'Timers & transfers',
+  'Media',
+  'Passive system info',
+];
+
 export interface Activity {
   id: ModuleId;
   kind: ActivityKind;
   /** 1 = current interaction, 2 = urgent, 3 = ongoing, 4 = active, 5 = passive. */
   tier: number;
+  /** Which configurable band this activity competes in. */
+  band: PriorityBand;
 }
 
 export type PermissionState =
@@ -288,7 +309,7 @@ export interface HaloState {
   ai: AiState;
 
   settings: SettingsState;
-  priorityOrder: string[];
+  priorityOrder: PriorityBand[];
   enabledModules: ModuleId[];
 
   onboardOpen: boolean;
