@@ -22,9 +22,12 @@ export function deriveActivities(state: HaloState): Activity[] {
     if (!out.some((a) => a.id === id)) out.push({ id, kind, tier });
   };
 
-  // Tier 2 — urgent. A completed timer persists until acknowledged.
+  // Tier 2 — urgent. Each of these persists until the user deals with it.
   if (state.timers.some((t) => t.done)) push('timer', 'timer', 2);
   if (state.meeting.phase === 'ringing') push('meeting', 'call', 2);
+  // A failed transfer still offers Retry, so it stays on the island rather
+  // than vanishing when the last active transfer finishes.
+  if (state.transfers.some((d) => d.state === 'failed')) push('download', 'download', 2);
 
   // Tier 3 — ongoing.
   if (state.meeting.phase === 'live') push('meeting', 'meeting', 3);
