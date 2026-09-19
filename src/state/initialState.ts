@@ -291,7 +291,15 @@ export function createInitialState(now = Date.now()): HaloState {
   };
 }
 
-/** Fields `Reset demonstration data` restores; settings are left alone. */
+/**
+ * Fields `Reset demonstration data` restores. Settings — appearance,
+ * activation, motion, module selection — are deliberately left alone; that is
+ * what `Reset all settings` is for.
+ *
+ * Everything the Reset pane's copy promises has to appear here, or the button
+ * quietly under-delivers: the sample media, timer, meeting, shelf, transfers,
+ * and permissions.
+ */
 export function demoResetPatch(now = Date.now()): Partial<HaloState> {
   const fresh = createInitialState(now);
   return {
@@ -300,14 +308,36 @@ export function demoResetPatch(now = Date.now()): Partial<HaloState> {
     forced: null,
     override: null,
     trackIx: 0,
-    calendarPerm: 'granted',
-    media: fresh.media,
-    timers: fresh.timers,
-    meeting: fresh.meeting,
-    battery: fresh.battery,
     paletteQuery: '',
     paletteSel: 0,
     cycles: false,
     toasts: [],
+
+    // Sample content.
+    media: fresh.media,
+    timers: fresh.timers,
+    meeting: fresh.meeting,
+    battery: fresh.battery,
+    shelf: fresh.shelf,
+    shelfHot: false,
+    transfers: fresh.transfers,
+    workflows: fresh.workflows,
+    clips: fresh.clips,
+    clipCapture: fresh.clipCapture,
+    clipQuery: '',
+    clipPaused: false,
+    clipRetention: fresh.clipRetention,
+    plugins: fresh.plugins,
+    ai: fresh.ai,
+    bt: fresh.bt,
+    audioOutput: fresh.audioOutput,
+    windowsTarget: fresh.windowsTarget,
+    statsSeed: fresh.statsSeed,
+    statsStale: fresh.statsStale,
+
+    // Permissions.
+    calendarPerm: fresh.calendarPerm,
+    accessibilityPerm: fresh.accessibilityPerm,
+    perms: fresh.perms,
   };
 }
