@@ -1,4 +1,5 @@
 import { useHalo, useHaloApi } from '../state/context';
+import { useCollapseHold } from '../lib/useCollapseHold';
 import { ProgressBar } from '../components/primitives/ProgressBar';
 
 /** The exact text that would leave the machine, shown before anything is sent. */
@@ -11,7 +12,8 @@ const SUBMISSION =
  */
 export function AiModule() {
   const { state } = useHalo();
-  const { dispatch, toast, runAi, hold, release } = useHaloApi();
+  const { dispatch, toast, runAi } = useHaloApi();
+  const { hold, release } = useCollapseHold();
   const { ai } = state;
 
   if (!ai.enabled) {

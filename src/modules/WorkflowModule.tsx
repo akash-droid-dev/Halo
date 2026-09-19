@@ -1,10 +1,12 @@
 import { useHalo, useHaloApi } from '../state/context';
+import { useCollapseHold } from '../lib/useCollapseHold';
 import { ProgressBar } from '../components/primitives/ProgressBar';
 
 /** Saved workflows. Each run reports its own progress, result, and failure. */
 export function WorkflowModule() {
   const { state } = useHalo();
-  const { dispatch, toast, runWorkflow, hold, release } = useHaloApi();
+  const { dispatch, toast, runWorkflow } = useHaloApi();
+  const { hold, release } = useCollapseHold();
 
   return (
     <div className="module-stack module-stack--tight">

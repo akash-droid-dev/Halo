@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 
 import { MODULE_IDS, MODULE_SUBTITLES, TITLES } from '../state/constants';
 import { useHalo, useHaloApi } from '../state/context';
+import { useCollapseHold } from '../lib/useCollapseHold';
 import { SearchIcon } from '../components/primitives/Icon';
 
 type CommandGroup = 'Module' | 'Workflow' | 'Action' | 'File' | 'App';
@@ -32,7 +33,7 @@ export function PaletteModule() {
   const { state } = useHalo();
   const { dispatch, toast, open, collapse, runWorkflow, runWindowAction, addTimer } = useHaloApi();
   const inputRef = useRef<HTMLInputElement>(null);
-  const { hold, release } = useHaloApi();
+  const { hold, release } = useCollapseHold();
 
   // The palette is a search surface, so it takes focus the moment it opens.
   useEffect(() => {

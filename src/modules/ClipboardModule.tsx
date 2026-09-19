@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import { useHalo, useHaloApi } from '../state/context';
+import { useCollapseHold } from '../lib/useCollapseHold';
 import { EmptyState } from '../components/primitives/EmptyState';
 import { CloseIcon, CopyIcon, PinIcon, SearchIcon } from '../components/primitives/Icon';
 import type { Clip } from '../state/types';
@@ -21,7 +22,8 @@ const BADGES: Record<Clip['type'], string> = {
  */
 export function ClipboardModule() {
   const { state } = useHalo();
-  const { dispatch, toast, hold, release } = useHaloApi();
+  const { dispatch, toast } = useHaloApi();
+  const { hold, release } = useCollapseHold();
 
   const items = useMemo(() => {
     const query = state.clipQuery.trim().toLowerCase();
