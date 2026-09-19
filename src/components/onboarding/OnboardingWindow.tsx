@@ -1,4 +1,5 @@
 import { MODULE_IDS, ONBOARDING_STEPS, TITLES } from '../../state/constants';
+import type { ModuleId } from '../../state/types';
 import { useHalo, useHaloApi } from '../../state/context';
 import { CheckIcon } from '../primitives/Icon';
 import { KeyCombo } from '../primitives/KeyCombo';
@@ -20,11 +21,15 @@ export function OnboardingWindow() {
   const step = state.onboardStep;
   const content = ONBOARDING_STEPS[step] ?? ONBOARDING_STEPS[0];
 
+  // Each request names the module that needs it, and is only offered when that
+  // module is enabled — otherwise this step would ask for privileges for
+  // features the user just turned off, contradicting the note below it.
   const permissions = [
     {
       key: 'calendar' as const,
       label: 'Calendars',
       why: 'Needed by Meetings for the next event and join links.',
+      neededBy: ['meeting'] as ModuleId[],
       granted: state.calendarPerm === 'granted',
       grant: () => dispatch({ type: 'setCalendarPerm', value: 'granted' }),
     },
@@ -32,6 +37,7 @@ export function OnboardingWindow() {
       key: 'accessibility' as const,
       label: 'Accessibility',
       why: 'Needed by Windows to move and resize other apps.',
+      neededBy: ['windows'] as ModuleId[],
       granted: state.accessibilityPerm === 'granted',
       grant: () => dispatch({ type: 'setAccessibilityPerm', value: 'granted' }),
     },
@@ -39,10 +45,13 @@ export function OnboardingWindow() {
       key: 'notifications' as const,
       label: 'Notifications',
       why: 'Needed for timer completion and transfer alerts.',
+      neededBy: ['timer', 'download'] as ModuleId[],
       granted: state.perms.notifications === 'granted',
       grant: () => dispatch({ type: 'setPerm', key: 'notifications', value: 'granted' }),
     },
-  ];
+  ].filter((permission) =>
+    permission.neededBy.some((id) => state.enabledModules.includes(id)),
+  );
 
   return (
     <div
