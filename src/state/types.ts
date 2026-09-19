@@ -101,6 +101,8 @@ export interface Timer {
   done: boolean;
   /** Remaining time captured at the moment a timer was paused. */
   remainMs?: number;
+  /** Which half of a work/break cycle this timer is. */
+  phase?: 'work' | 'break';
 }
 
 export type MeetingPhase = 'soon' | 'live' | 'ringing';

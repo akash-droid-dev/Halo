@@ -10,6 +10,7 @@ import type {
   SettingsState,
   ShelfFile,
   SurfaceId,
+  Timer,
   Toast,
 } from './types';
 
@@ -123,6 +124,35 @@ export type Action =
   | { type: 'onboardStep'; delta: number }
   // ---- demo
   | { type: 'demoReset' };
+
+/** Work/break cycle lengths, as the Timers module describes them. */
+const CYCLE_WORK_MINUTES = 25;
+const CYCLE_BREAK_MINUTES = 5;
+
+/**
+ * What happens when a timer reaches zero.
+ *
+ * With cycles off it stops and waits to be acknowledged. With cycles on it
+ * immediately starts the other half of the cycle, which is what the toggle's
+ * copy promises. Both the natural expiry and the demo trigger go through here,
+ * so a finished timer behaves the same either way.
+ */
+function finishTimer(timer: Timer, cycles: boolean, now: number): Timer {
+  if (!cycles) return { ...timer, running: false, done: true };
+
+  const next = timer.phase === 'break' ? 'work' : 'break';
+  const minutes = next === 'work' ? CYCLE_WORK_MINUTES : CYCLE_BREAK_MINUTES;
+  return {
+    ...timer,
+    name: next === 'work' ? 'Work' : 'Break',
+    phase: next,
+    durMs: minutes * 60_000,
+    endAt: now + minutes * 60_000,
+    running: true,
+    done: false,
+    remainMs: undefined,
+  };
+}
 
 /** Position the media module is at right now, accounting for elapsed playback. */
 export function mediaPosition(state: HaloState, now = Date.now()): number {
@@ -303,6 +333,7 @@ export function haloReducer(state: HaloState, action: Action): HaloState {
             endAt: now + action.minutes * 60_000,
             running: true,
             done: false,
+            phase: 'work',
           },
         ],
         draftName: '',
@@ -345,18 +376,20 @@ export function haloReducer(state: HaloState, action: Action): HaloState {
       return {
         ...state,
         timers: state.timers.map((t) =>
-          t.id === action.id ? { ...t, running: false, done: true } : t,
+          t.id === action.id ? finishTimer(t, state.cycles, Date.now()) : t,
         ),
         override: null,
       };
 
-    case 'timersExpire':
+    case 'timersExpire': {
+      const now = Date.now();
       return {
         ...state,
         timers: state.timers.map((t) =>
-          action.ids.includes(t.id) ? { ...t, running: false, done: true } : t,
+          action.ids.includes(t.id) ? finishTimer(t, state.cycles, now) : t,
         ),
       };
+    }
 
     case 'setDraftName':
       return { ...state, draftName: action.value };
