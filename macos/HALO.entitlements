@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!--
+      HALO runs inside the App Sandbox with no outbound network capability.
+
+      `com.apple.security.network.client` is deliberately ABSENT rather than
+      set to false: any attempt to open a socket is refused by the kernel, so
+      "this app cannot send your data anywhere" is enforced by macOS and not by
+      a promise in a README. Do not add it. If a future module appears to need
+      it, that module does not belong in this app.
+
+      Also absent, for the same reason: network.server, device.camera,
+      device.microphone, device.usb, and every personal-information key
+      (addressbook, location, photos). Each one is a deliberate omission.
+    -->
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+
+    <!--
+      Read-only access to files the user explicitly drags in, for the file
+      shelf. Scoped bookmarks keep those grants across launches without ever
+      widening to the whole disk.
+    -->
+    <key>com.apple.security.files.user-selected.read-only</key>
+    <true/>
+</dict>
+</plist>

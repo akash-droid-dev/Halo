@@ -1,0 +1,7 @@
+# Every change needs the repository owner's review.
+* @akash-droid-dev
+
+# The privacy guarantee is the one thing that must never change by accident.
+/macos/HALO.entitlements   @akash-droid-dev
+/macos/PRIVACY.md          @akash-droid-dev
+/.github/workflows/        @akash-droid-dev
